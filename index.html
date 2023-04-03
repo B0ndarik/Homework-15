@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 		Задача 0. Дано два об’єкта. Обидва містять масив цілих чисел. При цьому у одному з них є функція ////знаходження суми, а у іншому – функція для знаходження добутку тих, які знаходяться між заданими мінімальним і максимальних значенням.
+      // Використати обидва методи стосовно обидвох об’єктів (використати call, apply)
+
+      let obj1 = {
+        numberList: [2, 5, 32, 56, 23, 9, 10, 11, 35],
+        getSum: function () {
+          return this.numberList.reduce(
+            (prevValue, number) => prevValue + number
+          );
+        },
+      };
+
+      let obj2 = {
+        numberList: [5, 76, 23, 59, 64, 1, 67, 8, 32],
+        getProduct: function (min, max) {
+          return this.numberList.reduce(
+            (prevValue, number) =>
+              number > min && number < max ? prevValue * number : prevValue,
+            1
+          );
+        },
+      };
+
+      let obj2Sum = obj1.getSum.call(obj2);
+      console.log(obj2Sum);
+
+      let obj1Product = obj2.getProduct.apply(obj1, [3, 40]);
+      console.log(obj1Product);
+
+      //Задача 1. Створити об’єкт «Тир». У масиві зберігаються 1, якщо у цьому квадраті є заєць і 0 в іншому випадку.
+      let shootingRange = {
+        hareLocation: [0, 1, 0, 0, 0, 1, 0],
+        shoot: function () {
+          let shootingSpot = parseInt(
+            prompt(`Enter shot spot 1 - ${this.hareLocation.length}`)
+          );
+          if (this.hareLocation[shootingSpot - 1] === 1) alert("Good shot");
+          else alert("Missed");
+          document.write(`Where hares hide [${this.hareLocation}]`);
+        },
+      };
+
+      //shootingRange.shoot();
+
+      function AutoObj(
+        make,
+        fuelTank,
+        fuelContent,
+        passengersCapasity,
+        passengersNumber
+      ) {
+        this.make = make;
+        this.fuelTank = fuelTank;
+        this.fuelContent = fuelContent;
+        this.passengersCapasity = passengersCapasity;
+        this.passengersNumber = passengersNumber;
+      }
+
+      AutoObj.prototype.freeTankSpace = function () {
+        return this.fuelTank - this.fuelContent;
+      };
+      AutoObj.prototype.displayPassangers = function () {
+        document.write(`Number of passangers - ${this.passengersNumber}`);
+      };
+      AutoObj.prototype.addPassangers = function (pas) {
+        let availableSeats = this.passengersCapasity - this.passengersNumber;
+        if (pas > availableSeats) {
+          alert(`Only ${availableSeats} seats available`);
+          this.passengersNumber = this.passengersCapasity;
+        } else this.passengersNumber += pas;
+      };
+      AutoObj.prototype.passangersDropOff = function (pas) {
+        this.passengersNumber -= pas;
+      };
+
+      //Задача 3. Розробити клас MultChecker для перевірки таблиці множення
+
+      class MultChecker {
+        constructor(multOnNumber) {
+          (this.multOnNumber = multOnNumber),
+            (this.rightAnswer = 0),
+            (this.wrongAnswer = 0);
+        }
+
+        getExample(min, max) {
+          return min + Math.floor(Math.random() * (max - min + 1));
+        }
+        exampleCheck(min, max) {
+          this.rightAnswer = 0;
+          this.wrongAnswer = 0;
+          let answer;
+          do {
+            let number2 = this.getExample(min, max);
+            answer = parseInt(prompt(`${this.multOnNumber} * ${number2} = `));
+            if (number2 * this.multOnNumber === answer) this.rightAnswer++;
+            if (answer && number2 * this.multOnNumber !== answer)
+              this.wrongAnswer++;
+          } while (answer);
+        }
+        render() {
+          document.write(`Wrong answers - ${this.wrongAnswer}<br>`);
+          document.write(`Right answers - ${this.rightAnswer}`);
+        }
+      }
+      let multChecker = new MultChecker(7);
+      // multChecker.exampleCheck(1, 5);
+      // multChecker.render();
+
+      // Задача 4. Розробити клас Baner
+
+      let imageLinkArr = [
+        {
+          image:
+            "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTZAbSowMRs-7RpL9I6m9vNpGZMppqONH5d37nbgLXODeVNZmm5",
+          link: "https://www.tesla.com/",
+        },
+        {
+          image:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc9UYOprTGnJBdnDpSez6klHmy7KuuoPHNoQQp4XvD9rRmTTPS",
+          link: "https://www.ford.com/",
+        },
+      ];
+
+      class Banner {
+        constructor(imageLinkArr) {
+          this.imageLinkArr = imageLinkArr;
+        }
+        getRandomImage() {
+          return Math.floor(Math.random() * this.imageLinkArr.length);
+        }
+        displayImage() {
+          let randomIndex = this.getRandomImage();
+          document.write(
+            `<a href="${this.imageLinkArr[randomIndex].link}"><img src="${this.imageLinkArr[randomIndex].image}" style="max-width:400px"></a>`
+          );
+        }
+      }
+
+      let banner = new Banner(imageLinkArr);
+      //banner.displayImage();
+
+      //Задача 5. Розробити клас «Керівник танців»
+
+      let boys = ["Andrew", "Pavlo", "Mark", "Artem", "Ivan"];
+      let girls = ["Olga", "Olena", "Margo", "Iryna", "Anna"];
+
+      class DanceInstructor {
+        constructor(boys, girls) {
+          (this.boysArr = boys), (this.girlsArr = girls);
+        }
+        randomBoy() {
+          return this.boysArr[Math.floor(Math.random() * this.boysArr.length)];
+        }
+        randomGirl() {
+          return this.girlsArr[
+            Math.floor(Math.random() * this.girlsArr.length)
+          ];
+        }
+        dancingPair() {
+          alert(`${this.randomBoy()} - ${this.randomGirl()}`);
+        }
+        run(delay) {
+          setInterval(() => {
+            this.dancingPair();
+          }, delay * 1000);
+        }
+      }
+
+      let danceInstructor = new DanceInstructor(boys, girls);
+      danceInstructor.run(5);
+    </script>
+  </body>
+</html>
